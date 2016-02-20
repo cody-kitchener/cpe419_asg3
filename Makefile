@@ -1,28 +1,23 @@
-# The compiler; using icpc (Intel C++ compiler)
 CC = icpc
+CFLAGS= -std=gnu99 -g -O2 -debug inline-debug-info -qopenmp -qopt-report=5 -Wall -mlk
+LIBS = -L/opt/intel/lib/intel64_lin -L/opt/intel/lib/intel64_lin_mic 
+OUT = tsp
+FILES = parse.cpp parse.h airport.cpp airport.h route.cpp route.h city.cpp city.h
 
-# Compiler Flags:
-# -O2: 		recommended by Intel when using SIMD instructions,
-# 		and tests with OpenMP and SIMD shows it has an
-# 		improvement (at least for Intel architecture) over
-# 		using the O3 optimization flag
-#
-# -o:		used to name the binary file (ex. -o TSP)
-#
-# -g:		allows debugging information to the binary file
-#
-# -debug inline-debug-info
-#
-# -Wall:	enables all warnings for the compiler
-#
-# -omp:		links the compiler to OpenMP
-#
-# -mkl:		links the compiler to the Intel Math Kernel Library (MKL)
-#  		NOTE - some of the flags to go with the -mkl link are
-#  			1) =parallel (for -qopenmp or -tbb)
-#  			2) =sequentia (sequential version of MKL)
-#  			3) =cluster (links with cluster components of MKL)
-CFLAGS = 
+all: build
 
-# Libraries to include
-LIBS = -L/opt/intel/lib/intel64_lin -L/opt/intel/lib/intel64_lin_mic
+build: $(FILES)
+	$(CC) -o $(OUT) $(CFLAGS) $(FILES)
+
+clean:
+	rm -f *.o
+	rm -f $(OUT)
+	rm -f result.out
+
+rebuild: clean build
+
+runtsp:
+	./$(OUT) airport.dat route.dat
+
+valgrindtsp:
+	valgrind --tool=memcheck ./$(OUT) airport.dat route.dat
