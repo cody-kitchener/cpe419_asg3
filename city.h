@@ -17,6 +17,7 @@ private:
 
 public:
    City();
+   City(string name);
 
    void setName(string name);
    void addRoute(Route route);

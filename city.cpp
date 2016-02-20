@@ -8,6 +8,11 @@ using namespace std;
 
 City::City() {}
 
+City::City(string name) {
+   m_name = name;
+   m_routes.clear();
+}
+
 void City::setName(string name) {
    m_name = name;
 }
